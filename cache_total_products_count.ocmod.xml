@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+  <name><![CDATA[Cache total count products]]></name>
+  <code><![CDATA[cache_total_count_products]]></code>
+	<version><![CDATA[1.0]]></version>
+	<author><![CDATA[REDS PRAI]]></author>
+	<link><![CDATA[https://www.agenciaprai.com/]]></link>
+		
+    <file path="catalog/model/catalog/product.php">
+			<operation error="skip">
+				<search index="2"><![CDATA[$query = $this->db->query($sql);]]></search>
+				<add position="replace" offset="1"><![CDATA[
+				// Cache total count products
+				$cacheid='product.gettotalproducts.'.md5($sql).'prc';
+       $total=$this->cache->get($cacheid);
+       if (!$total) {
+           $query = $this->db->query($sql);
+           $total = $query->row['total'];
+           $this->cache->set($cacheid,$total);
+       }
+       return $total;
+				]]></add>
+			</operation>
+    </file>
+</modification>
